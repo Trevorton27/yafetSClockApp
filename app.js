@@ -1,63 +1,81 @@
 // Time
-function time() {
-  let today = new Date();
-  let hours = today.getHours();
-  let minutes = today.getMinutes();
-  let seconds = today.getSeconds();
+function renderTime() {
+  const theTime = new Date();
+  const seconds = addLeadingZero(theTime.getSeconds());
+  const minutes = addLeadingZero(theTime.getMinutes());
+  const hours = theTime.getHours();
+  const isAm = hours < 12 || hours === 0;
+  let amPm = isAm ? 'AM' : 'PM';
 
-  let ampms = hours > 12 ? "PM" : "AM";
-
-  if (seconds < 10) {
-    seconds = "0" + seconds;
-  }
-
-  if (minutes < 10) {
-    minutes = "0" + minutes;
-  }
-
-  if (hours > 12) {
-    hours = hours - 12;
-  }
-
-  document.getElementById("hour").innerHTML = hours;
-  document.getElementById("minute").innerHTML = minutes;
-  document.getElementById("second").innerHTML = seconds;
-  document.getElementById("ampm").innerHTML = ampms;
-
-  // Date
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
-  const weekNames = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday ",
-    "Saturday",
-    "Sunday",
-  ];
-
-  let days = today.getDay();
-  let months = today.getMonth();
-  let dates = today.getDate();
-  let years = today.getFullYear();
-
-  document.getElementById("day").innerHTML = weekNames[days];
-  document.getElementById("month").innerHTML = monthNames[months];
-  document.getElementById("date").innerHTML = dates;
-  document.getElementById("year").innerHTML = years;
+  const currentTime = `${formatHour(hours)}:${minutes}:${seconds} ${amPm}`;
+  document.getElementById('time').textContent = currentTime;
 }
-setInterval(time, 1000);
+
+function addLeadingZero(number) {
+  return number < 10 ? '0' + number : number;
+}
+
+function formatHour(hour) {
+  hour = hour >= 13 ? hour - 12 : hour;
+
+  hour = hour === 0 ? hour + 12 : hour;
+  return hour;
+}
+
+function renderDate() {
+  const theDate = new Date();
+  const day = dayNames[theDate.getDay()];
+  const month = monthNames[theDate.getMonth()];
+  const date = theDate.getDate();
+  const year = theDate.getFullYear();
+
+  const currentDate = `${day}, ${month} ${formatDateSuffix(date)} ${year}`;
+
+  document.getElementById('date').textContent = currentDate;
+}
+
+function formatDateSuffix(date) {
+  if (date < 10 || date > 20) {
+    switch (date % 10) {
+      case 1:
+        return `${date}st`;
+      case 2:
+        return `${date}nd`;
+      case 3:
+        return `${date}rd`;
+    }
+  }
+  return `${date}th`;
+}
+
+const monthNames = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+];
+
+const dayNames = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday ',
+  'Saturday',
+  'Sunday'
+];
+
+renderTime();
+renderDate();
+setInterval(() => {
+  renderTime();
+  renderDate();
+}, 1000);

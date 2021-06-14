@@ -12,13 +12,13 @@ body {
   font-size: 70px;
 }
 
-.time {
+#time {
   font-size: 120px;
   padding: 40px;
   font-weight: bold;
 }
 
-.date {
+#date {
   font-size: 60px;
 
   font-weight: bold;
